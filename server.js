@@ -19,3 +19,12 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
  */
 app.get('/long-url', getShortUrl);
 
+
+/***********
+ * Handler
+ */
+function getShortUrl(request, response) {
+  response.send('In getShortUrl');
+}
+
+
