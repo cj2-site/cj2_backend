@@ -24,7 +24,17 @@ app.get('/long-url', getShortUrl);
  * Handler
  */
 function getShortUrl(request, response) {
+  // Check Db for url
+  
+  // If in db, return short url
+  // Else shorten url, save to db, then return to user 
   response.send('In getShortUrl');
 }
+
+
+
+/***********
+ * Constructor
+ */
 
 
