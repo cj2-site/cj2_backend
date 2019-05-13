@@ -10,11 +10,11 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 //Database
-const client = new pg.Client(process.env.DATABASE_URL);
-client.connect();
+// const client = new pg.Client(process.env.DATABASE_URL);
+// client.connect();
 
 app.get('/hello', (request, response) => {
-  response.status(200).send('Hello');
+  response.status(200).send(test);
 });
 
 app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
@@ -32,3 +32,6 @@ URL.prototype.create_hash = function() {
   this.short_url = sha256(this.long_url).slice(0,4);
   console.log('Short URL', this.short_url);
 };
+
+const test = new URL('http://thisissample');
+test.create_hash();
