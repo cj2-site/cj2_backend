@@ -5,5 +5,5 @@ CREATE TABLE url (
   long_url TEXT,
   short_url TEXT,
   clicks INTEGER,
-  created_at DATE
+  created_at BIGINT
 );
