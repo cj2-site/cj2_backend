@@ -37,7 +37,6 @@ function getShortUrl(request, response) {
 }
 
 
-
 /***********
  * Constructor
  */
