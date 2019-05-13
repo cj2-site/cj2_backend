@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 //Database
-const client = new pg.Client(process.env.DATABASE_URL);
-client.connect();
+// const client = new pg.Client(process.env.DATABASE_URL);
+// client.connect();
 
 app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
 
@@ -32,8 +32,11 @@ function getShortUrl(request, response) {
   // Check Db for url
   
   // If in db, return short url
+
   // Else shorten url, save to db, then return to user 
-  response.send('In getShortUrl');
+  let newUrl = new URL(request.query.data);
+  newUrl.create_hash();
+  response.send(`cj2.site/${ newUrl.short_url }`);
 }
 
 
@@ -45,6 +48,7 @@ function URL (long_url) {
   this.short_url = '',
   this.clicks = 0;
 }
+
 
 // Method for creating short_url hash
 URL.prototype.create_hash = function() {
