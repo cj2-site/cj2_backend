@@ -42,7 +42,20 @@ function getShortUrl(request, response) {
   let values = [url];
 
   return client.query(sql, values)
-    .then(data => response.send((data.rowCount > 0) ? data.rows[0] : shortenURL(url)))
+    .then(data => {
+      if (data.rowCount > 0) {
+        let count = data.rows[0].times_created + 1;
+        let updateSQL = 'UPDATE url SET times = $1 WHERE times_created > 0';
+        let updateValues = [count];
+
+        client.query(updateSQL, updateValues);
+
+        response.send(data.rows[0]);
+      } else {
+        response.send(shortenURL(url));
+      }
+      // response.send((data.rowCount > 0) ? data.rows[0] : shortenURL(url))
+    })
     .catch(error => handleError(error));
 }
 
@@ -98,7 +111,7 @@ function URL (long_url) {
   this.short_url = '',
   this.clicks = 0,
   this.qr_code = '',
-  this.times_created = 0;
+  this.times_created = 1;
 }
 
 // Method for creating short_url hash
