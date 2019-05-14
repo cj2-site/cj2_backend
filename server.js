@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 //Database
-// const client = new pg.Client(process.env.DATABASE_URL);
-// client.connect();
+const client = new pg.Client(process.env.DATABASE_URL);
+client.connect();
 
 app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
 
@@ -30,7 +30,14 @@ app.get('/long-url', getShortUrl);
  */
 function getShortUrl(request, response) {
   // Check Db for url
-  
+  let sql = 'SELECT * FROM url WHERE long_url = $1;';
+  let values = [request.query.data];
+
+  return client.query(sql, values)
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => errorHandler(error));
   // If in db, return short url
 
   // Else shorten url, save to db, then return to user 
