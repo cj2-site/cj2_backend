@@ -58,6 +58,10 @@ function handleError(err, res) {
 function shortenURL(url){
   let newUrl = new URL(url);
   newUrl.create_hash();
+  
+  let sql = 'INSERT INTO url (long_url, short_url, clicks) VALUES ($1, $2, $3)';
+  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks]; 
+
   return `cj2.site/${ newUrl.short_url }`;
 };
 
