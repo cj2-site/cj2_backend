@@ -90,7 +90,6 @@ function handleRedirect(request, response) {
     handleError(error, response);
   }
  
-
 }
 
 app.get('*', handleRedirect);
