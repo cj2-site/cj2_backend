@@ -91,9 +91,9 @@ let shortenURL = (url) => {
 };
 
 //function to update the  number of clicks
-const updateDBClicks = (url) => {
-  let sql = 'UPDATE url SET clicks = clicks+1 WHERE city = $1;';
-  let values = [url];
+const updateDBClicks = (shorturl) => {
+  let sql = 'UPDATE url SET clicks = clicks+1 WHERE short_url = $1;';
+  let values = [shorturl];
 
   client.query(sql, values);
 };
