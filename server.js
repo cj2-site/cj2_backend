@@ -23,10 +23,14 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
 
 
 /***********
- * Route
+ * Routes
  */
 app.get('/long-url', getShortUrl);
-
+app.get('/hello', (request, response) => {
+  let url_obj = new URL(request.query.data);
+  url_obj.create_hash();
+  response.status(200).send(url_obj);
+});
 
 
 /***********
