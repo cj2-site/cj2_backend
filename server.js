@@ -28,12 +28,8 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
  * Routes
  */
 app.get('/long-url', getShortUrl);
-app.get('/hello', (request, response) => {
-  console.log(request);
-  let url_obj = new URL(request.query.data);
-  url_obj.create_hash();
-  response.status(200).send(url_obj);
-});
+app.get('*', handleRedirect);
+
 
 
 /***********
@@ -50,7 +46,21 @@ function getShortUrl(request, response) {
     .catch(error => handleError(error));
 }
 
-// This function takes an erro and then sends a generalized error to the user.
+//Method to redirect
+function handleRedirect(request, response) {
+  //pull
+  console.log(request.params[0].slice(1));
+  let url = request.params[0].slice(1);
+  let sql = 'SELECT * FROM url WHERE short_url = $1;';
+  let values = [url];
+
+
+  return client.query(sql, values)
+    .then(data => response.redirect(`${ data.rows[0].long_url }`))
+    .catch(error => handleError(error));
+}
+
+// This function takes an error and then sends a generalized error to the user.
 function handleError(err, res) {
   console.error('ERROR:', err);
 
@@ -66,7 +76,6 @@ function handleError(err, res) {
  */
 // This function takes a url, creates a new Url object, and then returns the url object with the shortened url and qrcode
 let shortenURL = (url) => {
-  console.log('In shortenURL');
   let newUrl = new URL(url);
   newUrl.create_hash();
   newUrl.getQRCode();
@@ -78,22 +87,6 @@ let shortenURL = (url) => {
 
   return newUrl;
 };
-
-//Method to redirect
-
-function handleRedirect(request, response) {
-  //pull
-  try{
-    console.log(request);
-    response.redirect('http://google.com');
-  } catch (error){
-    handleError(error, response);
-  }
- 
-}
-
-app.get('*', handleRedirect);
-
 
 
 
