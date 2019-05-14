@@ -27,7 +27,7 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
  */
 app.get('/long-url', getShortUrl);
 app.get('*', handleRedirect);
-app.put('*', deleteShortUrl)
+app.put('*', decrementShortUrl)
 
 
 
@@ -71,6 +71,23 @@ function handleRedirect(request, response) {
   return client.query(sql, values)
     .then(updateDBClicks(url))
     .then(data => response.redirect(`${ data.rows[0].long_url }`))
+    .catch(error => handleError(error));
+}
+
+function decrementShortUrl(request, response) {
+  let url = request.query.data;
+  let sql = 'SELECT * FROM url WHERE short_url = $1;';
+  let values = [url];
+
+  client.query(sql, values)
+    .then(data => {
+      let count = data.rows[0].times_created - 1 === 0;
+      let updateSQL = (count) ? 'UPDATE url SET times_created = $1 WHERE long_url = $2' : 'DELETE FROM url WHERE times_created = $1';
+      let updateValues = (count) ? [count, url] : [count];
+
+      client.query(updateSQL, updateValues);
+
+    })
     .catch(error => handleError(error));
 }
 
