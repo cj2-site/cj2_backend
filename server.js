@@ -1,20 +1,29 @@
 'use strict';
 
 require('dotenv').config();
-const express = require('express');
-const app = express();
+const superagent = require('superagent');
+const pg = require('pg');
 const cors = require('cors');
+const express = require('express');
 const sha256 = require('js-sha256');
-const PORT = process.env.PORT || 3000;
-
+const app = express();
 app.use(cors());
+
+const PORT = process.env.PORT || 3000;
 
 //Database
 // const client = new pg.Client(process.env.DATABASE_URL);
 // client.connect();
 
 app.get('/hello', (request, response) => {
-  response.status(200).send(test);
+  let url_obj = new URL(request.query.data);
+  url_obj.create_hash();
+  response.status(200).send(url_obj);
+  // const test = new URL('http://thisissample');
+  // test.create_hash();
+  // getQRCode(test.short_url);
+  // response.status(200).send(test);
+
 });
 
 app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
@@ -24,7 +33,8 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
 function URL (long_url) {
   this.long_url = long_url,
   this.short_url = '',
-  this.clicks = 0;
+  this.clicks = 0,
+  this.qr_code = '';
 }
 
 // Method for creating short_url hash
@@ -33,5 +43,16 @@ URL.prototype.create_hash = function() {
   console.log('Short URL', this.short_url);
 };
 
-const test = new URL('http://thisissample');
-test.create_hash();
+//function to get qr code
+const getQRCode = (url) => {
+  let qrURL = `http://api.qrserver.com/v1/create-qr-code/?data=${url}!&size=100x100`;
+  superagent.get(qrURL)
+    .buffer(true).parse(superagent.parse.image)
+    .then(res => {
+      console.log(res.body);
+    });
+
+
+};
+
+
