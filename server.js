@@ -45,14 +45,16 @@ function getShortUrl(request, response) {
     .then(data => {
       if (data.rowCount > 0) {
         let count = data.rows[0].times_created + 1;
-        let updateSQL = 'UPDATE url SET times = $1 WHERE times_created > 0';
-        let updateValues = [count];
+        let updateSQL = 'UPDATE url SET times_created = $1 WHERE long_url = $2';
+        let updateValues = [count, url];
 
         client.query(updateSQL, updateValues);
 
         response.send(data.rows[0]);
       } else {
-        response.send(shortenURL(url));
+        let newURL = shortenURL(url);
+
+        response.send(newURL);
       }
       // response.send((data.rowCount > 0) ? data.rows[0] : shortenURL(url))
     })
@@ -66,7 +68,6 @@ function handleRedirect(request, response) {
   let url = request.params[0].slice(1);
   let sql = 'SELECT * FROM url WHERE short_url = $1;';
   let values = [url];
-
 
   return client.query(sql, values)
     .then(data => response.redirect(`${ data.rows[0].long_url }`))
@@ -93,8 +94,8 @@ let shortenURL = (url) => {
   newUrl.create_hash();
   newUrl.getQRCode();
   
-  let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code) VALUES ($1, $2, $3, $4)';
-  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code]; 
+  let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code, times_created) VALUES ($1, $2, $3, $4, $5)';
+  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code, newUrl.times_created]; 
 
   client.query(sql, values);
 
