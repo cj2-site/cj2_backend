@@ -28,9 +28,11 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
 app.get('/long-url', getShortUrl);
 
 
+
 /***********
  * Handlers
  */
+// This route handler checks the db for a record then returns it, else it returns a new url object
 function getShortUrl(request, response) {
   let url = request.query.data;
   let sql = 'SELECT * FROM url WHERE long_url = $1;';
@@ -41,7 +43,7 @@ function getShortUrl(request, response) {
     .catch(error => handleError(error));
 }
 
-
+// This function takes an erro and then sends a generalized error to the user.
 function handleError(err, res) {
   console.error('ERROR:', err);
 
@@ -55,6 +57,7 @@ function handleError(err, res) {
 /***********
  * Helpers
  */
+// This function takes a url, creates a new Url object, and then returns the url object with the shortened url and qrcode
 let shortenURL = (url) => {
   console.log('In shortenURL');
   let newUrl = new URL(url);
