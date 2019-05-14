@@ -74,19 +74,29 @@ function handleRedirect(request, response) {
     .catch(error => handleError(error));
 }
 
+// This function decrements the times created then deletes from db is 0
 function decrementShortUrl(request, response) {
-  let url = request.query.data;
+  let url = request.params[0].slice(1);
   let sql = 'SELECT * FROM url WHERE short_url = $1;';
   let values = [url];
 
-  client.query(sql, values)
+  return client.query(sql, values)
     .then(data => {
-      let count = data.rows[0].times_created - 1 === 0;
-      let updateSQL = (count) ? 'UPDATE url SET times_created = $1 WHERE long_url = $2' : 'DELETE FROM url WHERE times_created = $1';
-      let updateValues = (count) ? [count, url] : [count];
+      let count = data.rows[0].times_created - 1;
 
-      client.query(updateSQL, updateValues);
+      if (count === 0) {
+        let deleteSQL = 'DELETE FROM url WHERE id = $1;';
+        let deleteValues = [data.rows[0].id];
 
+        client.query(deleteSQL, deleteValues);
+      } else {
+        let updateSQL = 'UPDATE url SET times_created = $1 WHERE short_url = $2;'
+        let updateValues = [count, url];
+
+        client.query(updateSQL, updateValues)
+      }
+      
+      response.send(data.rows[0]);
     })
     .catch(error => handleError(error));
 }
@@ -109,6 +119,7 @@ function handleError(err, res) {
 // This function takes a url, creates a new Url object, and then returns the url object with the shortened url and qrcode
 let shortenURL = (url) => {
   let newUrl = new URL(url);
+  newUrl.times_created = 1;
   newUrl.create_hash();
   newUrl.getQRCode();
   
@@ -138,7 +149,7 @@ function URL (long_url) {
   this.short_url = '',
   this.clicks = 0,
   this.qr_code = '',
-  this.times_created = 1;
+  this.times_created = 0;
 }
 
 // Method for creating short_url hash
