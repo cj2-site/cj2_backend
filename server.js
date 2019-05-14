@@ -81,9 +81,9 @@ function shortenURL (url){
   let newUrl = new URL(url);
   newUrl.create_hash();
   newUrl.getQRCode();
-  
+
   let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code) VALUES ($1, $2, $3, $4)';
-  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code]; 
+  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code];
 
   client.query(sql, values);
 
@@ -99,7 +99,17 @@ function updateDBClicks (shorturl){
 }
 
 //function to check if db already contains the short url
+function checkDB(param){
+  let sql = 'SELECT * FROM url WHERE short_url = $1;';
+  let values = [param];
+  let flag;
 
+  client.query(sql, values)
+    .then(data => {data.rowCount > 0 ? flag = true: flag = false;})
+    .catch(error => handleError(error));
+
+  return flag;
+}
 
 
 
@@ -116,13 +126,15 @@ function URL (long_url) {
 // Method for creating short_url hash
 URL.prototype.create_hash = function() {
   let index = 0;
+  let hash = sha256(this.long_url).slice(index, index + 4);
 
-  do{
-    let temp_url = sha256(this.long_url).slice(index, index + 4);
-    
+  while(checkDB(hash) && index < hash.length){
+    index += 4;
+    hash = hash.slice(index, index + 4);
+    console.log('Duplicate short_url');
   }
-  
-  
+
+  this.short_url = hash;
 };
 
 //function to get qr code
