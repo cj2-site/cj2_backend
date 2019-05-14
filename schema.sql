@@ -7,5 +7,5 @@ CREATE TABLE url (
   clicks INTEGER,
   qr_code TEXT,
   times_created INT,
-  created_at BIGINT
+  created_at timestamp NOT NULL DEFAULT NOW()
 );
