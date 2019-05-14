@@ -26,25 +26,19 @@ app.get('/long-url', getShortUrl);
 
 
 /***********
- * Handler
+ * Handlers
  */
 function getShortUrl(request, response) {
-  // Check Db for url
   let sql = 'SELECT * FROM url WHERE long_url = $1;';
   let values = [request.query.data];
 
   return client.query(sql, values)
     .then(data => {
-      console.log(data);
+      return (data.rowCount > 0) ? data.rows[0] : shortenURL(request.query.data);
     })
     .catch(error => handleError(error));
-  // If in db, return short url
-
-  // Else shorten url, save to db, then return to user 
-  let newUrl = new URL(request.query.data);
-  newUrl.create_hash();
-  response.send(`cj2.site/${ newUrl.short_url }`);
 }
+
 
 function handleError(err, res) {
   console.error('ERROR:', err);
@@ -53,6 +47,19 @@ function handleError(err, res) {
     res.status(500).send('Status 500: I done messed up.');
   }
 }
+
+
+/***********
+ * Helpers
+ */
+let shortenURL = (url) => {
+  // let newUrl = new URL(request.query.data);
+  // newUrl.create_hash();
+  // response.send(`cj2.site/${ newUrl.short_url }`);
+  console.log(`In shorten URL: ${ url }`);
+};
+
+
 
 /***********
  * Constructor
