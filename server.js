@@ -117,27 +117,46 @@ function handleError(err, res) {
  **********/
 
 // This function takes a url, creates a new Url object, and then returns the url object with the shortened url and qrcode
-let shortenURL = (url) => {
+function shortenURL (url){
   let newUrl = new URL(url);
   newUrl.times_created = 1;
   newUrl.create_hash();
   newUrl.getQRCode();
+<<<<<<< HEAD
   
   let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code, times_created) VALUES ($1, $2, $3, $4, $5)';
   let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code, newUrl.times_created]; 
+=======
+
+  let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code) VALUES ($1, $2, $3, $4)';
+  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code];
+>>>>>>> 76322cb0238d6eaafa7cc58d755de847ed4884bd
 
   client.query(sql, values);
 
   return newUrl;
-};
+}
 
 //function to update the  number of clicks
-const updateDBClicks = (shorturl) => {
+function updateDBClicks (shorturl){
   let sql = 'UPDATE url SET clicks = clicks+1 WHERE short_url = $1;';
   let values = [shorturl];
 
   client.query(sql, values);
-};
+}
+
+//function to check if db already contains the short url
+function checkDB(param){
+  let sql = 'SELECT * FROM url WHERE short_url = $1;';
+  let values = [param];
+  let flag;
+
+  client.query(sql, values)
+    .then(data => {data.rowCount > 0 ? flag = true: flag = false;})
+    .catch(error => handleError(error));
+
+  return flag;
+}
 
 
 
@@ -154,8 +173,16 @@ function URL (long_url) {
 
 // Method for creating short_url hash
 URL.prototype.create_hash = function() {
-  this.short_url = sha256(this.long_url).slice(0,4);
-  console.log('Short URL', this.short_url);
+  let index = 0;
+  let hash = sha256(this.long_url).slice(index, index + 4);
+
+  while(checkDB(hash) && index < hash.length){
+    index += 4;
+    hash = hash.slice(index, index + 4);
+    console.log('Duplicate short_url');
+  }
+
+  this.short_url = hash;
 };
 
 //function to get qr code
