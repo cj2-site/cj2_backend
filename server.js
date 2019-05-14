@@ -27,7 +27,7 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
  */
 app.get('/long-url', getShortUrl);
 app.get('*', handleRedirect);
-app.put('*', decrementShortUrl)
+app.put('*', decrementShortUrl);
 
 
 
@@ -37,27 +37,35 @@ app.put('*', decrementShortUrl)
 // This route handler checks the db for a record then returns it, else it returns a new url object
 function getShortUrl(request, response) {
   let url = request.query.data;
-  let sql = 'SELECT * FROM url WHERE long_url = $1;';
-  let values = [url];
 
-  return client.query(sql, values)
-    .then(data => {
-      if (data.rowCount > 0) {
-        let count = data.rows[0].times_created + 1;
-        let updateSQL = 'UPDATE url SET times_created = $1 WHERE long_url = $2';
-        let updateValues = [count, url];
 
-        client.query(updateSQL, updateValues);
+  //validate the entered url
+  if(/http(s)?:\/\/cj2.site(\/\w*)?/.test(url)){
+    response.send(request.query.data);
+  } else {
+    let sql = 'SELECT * FROM url WHERE long_url = $1;';
+    let values = [url];
 
-        response.send(data.rows[0]);
-      } else {
-        let newURL = shortenURL(url);
+    return client.query(sql, values)
+      .then(data => {
+        if (data.rowCount > 0) {
+          let count = data.rows[0].times_created + 1;
+          let updateSQL = 'UPDATE url SET times_created = $1 WHERE long_url = $2';
+          let updateValues = [count, url];
 
-        response.send(newURL);
-      }
+          client.query(updateSQL, updateValues);
+
+          response.send(data.rows[0]);
+        } else {
+          let newURL = shortenURL(url);
+
+          response.send(newURL);
+        }
       // response.send((data.rowCount > 0) ? data.rows[0] : shortenURL(url))
-    })
-    .catch(error => handleError(error));
+      })
+
+      .catch(error => handleError(error));
+  }
 }
 
 //Method to redirect
@@ -90,12 +98,12 @@ function decrementShortUrl(request, response) {
 
         client.query(deleteSQL, deleteValues);
       } else {
-        let updateSQL = 'UPDATE url SET times_created = $1 WHERE short_url = $2;'
+        let updateSQL = 'UPDATE url SET times_created = $1 WHERE short_url = $2;';
         let updateValues = [count, url];
 
-        client.query(updateSQL, updateValues)
+        client.query(updateSQL, updateValues);
       }
-      
+
       response.send(data.rows[0]);
     })
     .catch(error => handleError(error));
@@ -122,9 +130,9 @@ function shortenURL (url){
   newUrl.times_created = 1;
   newUrl.create_hash();
   newUrl.getQRCode();
-  
+
   let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code, times_created) VALUES ($1, $2, $3, $4, $5)';
-  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code, newUrl.times_created]; 
+  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code, newUrl.times_created];
 
   client.query(sql, values);
 
@@ -151,6 +159,8 @@ function checkDB(param){
 
   return flag;
 }
+
+
 
 
 
