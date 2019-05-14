@@ -122,15 +122,9 @@ function shortenURL (url){
   newUrl.times_created = 1;
   newUrl.create_hash();
   newUrl.getQRCode();
-<<<<<<< HEAD
   
   let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code, times_created) VALUES ($1, $2, $3, $4, $5)';
   let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code, newUrl.times_created]; 
-=======
-
-  let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code) VALUES ($1, $2, $3, $4)';
-  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code];
->>>>>>> 76322cb0238d6eaafa7cc58d755de847ed4884bd
 
   client.query(sql, values);
 
