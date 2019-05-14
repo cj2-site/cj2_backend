@@ -6,6 +6,6 @@ CREATE TABLE url (
   short_url TEXT,
   clicks INTEGER,
   qr_code TEXT,
-  timesCreated INT,
-  created_at BIGINT,
+  times_created INT,
+  created_at BIGINT
 );

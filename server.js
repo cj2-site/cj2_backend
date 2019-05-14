@@ -97,7 +97,8 @@ function URL (long_url) {
   this.long_url = long_url,
   this.short_url = '',
   this.clicks = 0,
-  this.qr_code = '';
+  this.qr_code = '',
+  this.times_created = 0;
 }
 
 // Method for creating short_url hash
