@@ -51,6 +51,7 @@ function handleError(err, res) {
 }
 
 
+
 /***********
  * Helpers
  */
@@ -65,7 +66,7 @@ let shortenURL = (url) => {
 
   client.query(sql, values);
 
-  return `cj2.site/${ newUrl.short_url }`;
+  return newUrl;
 };
 
 
