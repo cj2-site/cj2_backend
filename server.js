@@ -70,6 +70,7 @@ function handleRedirect(request, response) {
   let values = [url];
 
   return client.query(sql, values)
+    .then(updateDBClicks(url))
     .then(data => response.redirect(`${ data.rows[0].long_url }`))
     .catch(error => handleError(error));
 }
@@ -87,7 +88,8 @@ function handleError(err, res) {
 
 /***********
  * Helpers
- */
+ **********/
+
 // This function takes a url, creates a new Url object, and then returns the url object with the shortened url and qrcode
 let shortenURL = (url) => {
   let newUrl = new URL(url);
@@ -100,6 +102,14 @@ let shortenURL = (url) => {
   client.query(sql, values);
 
   return newUrl;
+};
+
+//function to update the  number of clicks
+const updateDBClicks = (shorturl) => {
+  let sql = 'UPDATE url SET clicks = clicks+1 WHERE short_url = $1;';
+  let values = [shorturl];
+
+  client.query(sql, values);
 };
 
 
