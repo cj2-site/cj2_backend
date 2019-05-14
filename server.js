@@ -55,13 +55,15 @@ function handleError(err, res) {
  * Helpers
  */
 let shortenURL = (url) => {
+  console.log('In shortenURL');
   let newUrl = new URL(url);
   newUrl.create_hash();
   newUrl.getQRCode();
   
-  let sql = 'INSERT INTO url (long_url, short_url, clicks) VALUES ($1, $2, $3, $4)';
+  let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code) VALUES ($1, $2, $3, $4)';
   let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code]; 
-  
+
+  client.query(sql, values);
 
   return `cj2.site/${ newUrl.short_url }`;
 };
