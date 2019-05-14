@@ -37,7 +37,7 @@ function getShortUrl(request, response) {
     .then(data => {
       console.log(data);
     })
-    .catch(error => errorHandler(error));
+    .catch(error => handleError(error));
   // If in db, return short url
 
   // Else shorten url, save to db, then return to user 
@@ -46,6 +46,13 @@ function getShortUrl(request, response) {
   response.send(`cj2.site/${ newUrl.short_url }`);
 }
 
+function handleError(err, res) {
+  console.error('ERROR:', err);
+
+  if (res) {
+    res.status(500).send('Status 500: I done messed up.');
+  }
+}
 
 /***********
  * Constructor
