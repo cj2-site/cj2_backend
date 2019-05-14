@@ -14,8 +14,6 @@ const app = express();
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
-//BASE URL
-const BASE_URL = 'http://cj2.site';
 
 // Database
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -29,6 +27,7 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
  */
 app.get('/long-url', getShortUrl);
 app.get('*', handleRedirect);
+app.put('*', deleteShortUrl)
 
 
 
