@@ -37,16 +37,8 @@ function getShortUrl(request, response) {
   let sql = 'SELECT * FROM url WHERE long_url = $1;';
   let values = [url];
 
-  console.log(process.env.DATABASE_URL);
   return client.query(sql, values)
-    .then(data => {
-      // if (data.rowCount > 0) {
-      //   return data.rows[0];
-      // } else {
-      //   shortenURL();
-      // }
-      return (data.rowCount > 0) ? data.rows[0] : shortenURL(url);
-    })
+    .then(data => response.send((data.rowCount > 0) ? data.rows[0] : shortenURL(url)))
     .catch(error => handleError(error));
 }
 
@@ -64,10 +56,9 @@ function handleError(err, res) {
  * Helpers
  */
 function shortenURL(url){
-  // let newUrl = new URL(request.query.data);
-  // newUrl.create_hash();
-  // response.send(`cj2.site/${ newUrl.short_url }`);
-  console.log(url);
+  let newUrl = new URL(url);
+  newUrl.create_hash();
+  return `cj2.site/${ newUrl.short_url }`;
 };
 
 
