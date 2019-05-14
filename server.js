@@ -14,6 +14,8 @@ const app = express();
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
+//BASE URL
+const BASE_URL = 'http://cj2.site';
 
 // Database
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -27,6 +29,7 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
  */
 app.get('/long-url', getShortUrl);
 app.get('/hello', (request, response) => {
+  console.log(request);
   let url_obj = new URL(request.query.data);
   url_obj.create_hash();
   response.status(200).send(url_obj);
@@ -76,6 +79,21 @@ let shortenURL = (url) => {
   return newUrl;
 };
 
+//Method to redirect
+
+function handleRedirect(request, response) {
+  //pull
+  try{
+    console.log(request);
+    response.redirect('http://google.com');
+  } catch (error){
+    handleError(error, response);
+  }
+ 
+
+}
+
+app.get('*', handleRedirect);
 
 
 
@@ -99,10 +117,4 @@ URL.prototype.create_hash = function() {
 //function to get qr code
 URL.prototype.getQRCode = function() {
   this.qr_code = `http://api.qrserver.com/v1/create-qr-code/?data=${ this.short_url }!&size=100x100`;
-  
-  superagent.get(this.qr_code)
-    .buffer(true).parse(superagent.parse.image)
-    .then(res => {
-      console.log(res.body);
-    });
 };
