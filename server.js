@@ -77,7 +77,7 @@ function handleError(err, res) {
  **********/
 
 // This function takes a url, creates a new Url object, and then returns the url object with the shortened url and qrcode
-let shortenURL = (url) => {
+function shortenURL (url){
   let newUrl = new URL(url);
   newUrl.create_hash();
   newUrl.getQRCode();
@@ -88,15 +88,18 @@ let shortenURL = (url) => {
   client.query(sql, values);
 
   return newUrl;
-};
+}
 
 //function to update the  number of clicks
-const updateDBClicks = (shorturl) => {
+function updateDBClicks (shorturl){
   let sql = 'UPDATE url SET clicks = clicks+1 WHERE short_url = $1;';
   let values = [shorturl];
 
   client.query(sql, values);
-};
+}
+
+//function to check if db already contains the short url
+
 
 
 
@@ -112,8 +115,14 @@ function URL (long_url) {
 
 // Method for creating short_url hash
 URL.prototype.create_hash = function() {
-  this.short_url = sha256(this.long_url).slice(0,4);
-  console.log('Short URL', this.short_url);
+  let index = 0;
+
+  do{
+    let temp_url = sha256(this.long_url).slice(index, index + 4);
+    
+  }
+  
+  
 };
 
 //function to get qr code
