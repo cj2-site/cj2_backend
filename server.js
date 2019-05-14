@@ -54,25 +54,19 @@ function handleError(err, res) {
 /***********
  * Helpers
  */
-function shortenURL(url){
+let shortenURL = (url) => {
   let newUrl = new URL(url);
   newUrl.create_hash();
+  newUrl.getQRCode();
   
-  let sql = 'INSERT INTO url (long_url, short_url, clicks) VALUES ($1, $2, $3)';
-  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks]; 
+  let sql = 'INSERT INTO url (long_url, short_url, clicks) VALUES ($1, $2, $3, $4)';
+  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code]; 
+  
 
   return `cj2.site/${ newUrl.short_url }`;
 };
 
-//function to get qr code
-const getQRCode = (url) => {
-  let qrURL = `http://api.qrserver.com/v1/create-qr-code/?data=${url}!&size=100x100`;
-  superagent.get(qrURL)
-    .buffer(true).parse(superagent.parse.image)
-    .then(res => {
-      console.log(res.body);
-    });
-};
+
 
 
 
@@ -92,3 +86,13 @@ URL.prototype.create_hash = function() {
   console.log('Short URL', this.short_url);
 };
 
+//function to get qr code
+URL.prototype.getQRCode = function() {
+  this.qr_code = `http://api.qrserver.com/v1/create-qr-code/?data=${ this.short_url }!&size=100x100`;
+  
+  superagent.get(this.qr_code)
+    .buffer(true).parse(superagent.parse.image)
+    .then(res => {
+      console.log(res.body);
+    });
+};
