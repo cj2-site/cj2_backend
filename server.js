@@ -14,8 +14,6 @@ const app = express();
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
-//BASE URL
-const BASE_URL = 'http://cj2.site';
 
 // Database
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -29,6 +27,7 @@ app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
  */
 app.get('/long-url', getShortUrl);
 app.get('*', handleRedirect);
+app.put('*', decrementShortUrl)
 
 
 
@@ -42,7 +41,22 @@ function getShortUrl(request, response) {
   let values = [url];
 
   return client.query(sql, values)
-    .then(data => response.send((data.rowCount > 0) ? data.rows[0] : shortenURL(url)))
+    .then(data => {
+      if (data.rowCount > 0) {
+        let count = data.rows[0].times_created + 1;
+        let updateSQL = 'UPDATE url SET times_created = $1 WHERE long_url = $2';
+        let updateValues = [count, url];
+
+        client.query(updateSQL, updateValues);
+
+        response.send(data.rows[0]);
+      } else {
+        let newURL = shortenURL(url);
+
+        response.send(newURL);
+      }
+      // response.send((data.rowCount > 0) ? data.rows[0] : shortenURL(url))
+    })
     .catch(error => handleError(error));
 }
 
@@ -54,10 +68,36 @@ function handleRedirect(request, response) {
   let sql = 'SELECT * FROM url WHERE short_url = $1;';
   let values = [url];
 
-
   return client.query(sql, values)
     .then(updateDBClicks(url))
     .then(data => response.redirect(`${ data.rows[0].long_url }`))
+    .catch(error => handleError(error));
+}
+
+// This function decrements the times created then deletes from db is 0
+function decrementShortUrl(request, response) {
+  let url = request.params[0].slice(1);
+  let sql = 'SELECT * FROM url WHERE short_url = $1;';
+  let values = [url];
+
+  return client.query(sql, values)
+    .then(data => {
+      let count = data.rows[0].times_created - 1;
+
+      if (count === 0) {
+        let deleteSQL = 'DELETE FROM url WHERE id = $1;';
+        let deleteValues = [data.rows[0].id];
+
+        client.query(deleteSQL, deleteValues);
+      } else {
+        let updateSQL = 'UPDATE url SET times_created = $1 WHERE short_url = $2;'
+        let updateValues = [count, url];
+
+        client.query(updateSQL, updateValues)
+      }
+      
+      response.send(data.rows[0]);
+    })
     .catch(error => handleError(error));
 }
 
@@ -79,11 +119,12 @@ function handleError(err, res) {
 // This function takes a url, creates a new Url object, and then returns the url object with the shortened url and qrcode
 function shortenURL (url){
   let newUrl = new URL(url);
+  newUrl.times_created = 1;
   newUrl.create_hash();
   newUrl.getQRCode();
-
-  let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code) VALUES ($1, $2, $3, $4)';
-  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code];
+  
+  let sql = 'INSERT INTO url (long_url, short_url, clicks, qr_code, times_created) VALUES ($1, $2, $3, $4, $5)';
+  let values = [newUrl.long_url, newUrl.short_url, newUrl.clicks, newUrl.qr_code, newUrl.times_created]; 
 
   client.query(sql, values);
 
@@ -120,7 +161,8 @@ function URL (long_url) {
   this.long_url = long_url,
   this.short_url = '',
   this.clicks = 0,
-  this.qr_code = '';
+  this.qr_code = '',
+  this.times_created = 0;
 }
 
 // Method for creating short_url hash
