@@ -1,9 +1,7 @@
-![alt text](https://github.com/clothing-color-coordinator/API/blob/master/assets/colorBar1.PNG "Colors")
+![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/chucknorrismeme.jpg "chuck norris")
 
 # cj2 link shortener - backend
 > **the** premier site for link shortening and chuck norris jokes!
-
-![alt text](https://github.com/clothing-color-coordinator/API/blob/master/assets/colorBar2.PNG "Colors")
 
 ## table of contents
 * [purpose](#purpose)
@@ -19,8 +17,7 @@
 
 
 ## purpose:
-This API exists to hopefully make live a little simpler for anyone that works with color.
-Send a color to one of our many endpoints and receive a color palette back, complete with the color name and hex codes.
+> The purpose of the backend to the CJ2 site is to shorten links and redirect users to the original url when using the shortened link.
 
 ## summary
 The Color Wheel API provides color palettes based on user input and the color wheel.
