@@ -17,23 +17,16 @@
 
 
 ## purpose:
-> The purpose of the backend to the CJ2 site is to shorten links and redirect users to the original url when using the shortened link.
+> I hate when I need to share a link to a specific part of a website and that link is really long. The backend to the CJ2 site solves this problem by shortening links and redirecting users to the original url when using the shortened link. 
 
 ## summary
-The Color Wheel API provides color palettes based on user input and the color wheel.
-Each endpoint takes a color name and returns a JSON object for their specific color scheme:
-	- GetAnalogousPalette: Returns an [analogous palette](https://en.wikipedia.org/wiki/Analogous_colors).
-	- GetComplementaryPalette: Returns a [complementary palette](https://en.wikipedia.org/wiki/Complementary_colors).
-	- GetSplitComplementaryPalette: Returns [split complementary palette](https://en.wikipedia.org/wiki/Color_scheme#Complementary).
-	- GetTetradicPalette: Returns [tetradic palette](https://en.wikipedia.org/wiki/Color_scheme#Tetradic).
-	- GetTriadicPalette: Returns [triadic palette](https://en.wikipedia.org/wiki/Color_scheme#Triadic).
-
-The Color Wheel API can also take a palette of color names and tell you if it matches a specific color scheme:
-	- CheckAnalogous: Returns true if the three colors match an Analogous palette and false if it doesn't.
-	- CheckComplementary: Returns true if the three colors match a Complementary palette and false if it doesn't.
-	- CheckSplitComplementary: Returns true if the three colors match an Split Complementary palette and false if it doesn't.
-	- CheckTetradic: Returns true if the four colors match an Tetradic palette and false if it doesn't.
-	- CheckTriadic: Returns true if the three colors match a Triadic palette and false if it doesn't.
+1. Navigate to the front end at www.cj2.site.
+2. Paste your link into the input field.
+3. Press the button.
+4. A new field will appear with the shortened link. Press the button to copy it to your clipboard.
+5. Paste the link into the browser's url window.
+6. Press enter.
+7. Enjoy the site!
 
 ## endpoints
 ### get\[scheme\]palette example
