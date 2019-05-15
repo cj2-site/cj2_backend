@@ -82,6 +82,7 @@ function handleRedirect(request, response) {
     .catch(error => handleError(error));
 }
 
+
 // This function decrements the times created then deletes from db is 0
 function decrementShortUrl(request, response) {
   let url = request.params[0].slice(1);

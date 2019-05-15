@@ -60,16 +60,18 @@ ___
 ![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/decrementresponse2.png "An example response")
 
 ## methods
-Each controller has a two Get methods. One method handles the Get\[scheme\]Palette route and takes a single color, verifies the inbound color exists in the database, creates a palette if the color is in the specified palette table, and returns an error if either the palette or color is null. If not, it creates a Color object for each color in the palette, puts it in a list, and then returns the list of Color objects via the ASP.NET Core OK method.
-The other Get method handles the Check\[scheme\] route. It takes in 3-4 colors, verifies they are in the database, and returns an error if they are not. If they are in the database, the colors are thrown into a palette and then compared against the scheme specified in the route. If it exists, the colors match the scheme and a true response is sent back. If it doesn't, the colors don't match within the scheme and a false response is sent. 
+> getShortUrl(): The handler responsible for taking in a url and sending back an object.
+
+> handleRedirect(): The handler responsible for redirecting shortened links to the original url.
+
+> decrementShortUrl(): The handler responsible for deleting "instances" of a link from the database.
 
 
 ## schema
 ![alt text](https://github.com/clothing-color-coordinator/API/blob/master/assets/MidtermTables.PNG "Database Schema")
 
 ## notes
-- Colors sent to an endpoint must be sent via a capitalize string, i.e. Red
-- Colors that are made up of two color names must have a both names capitalized and a dash between them, i.e. Yellow-Green
+
 
 ## versions:
 > Version 1.0  February 01, 2019
