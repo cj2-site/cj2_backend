@@ -9,7 +9,7 @@
 * [endpoints](#endpoints)
 * [methods](#methods)
 * [schema](#schema)
-* [notes](#notes)
+* [technologies](#technologies)
 * [versions](#versions)
 * [authors](#authors)
 * [license](#license)
@@ -59,6 +59,7 @@ ___
 ![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/decrementresponse1.png "An example response")
 ![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/decrementresponse2.png "An example response")
 
+
 ## functions
 > getShortUrl(): The handler responsible for taking in a url and sending back an object.
 
@@ -70,13 +71,17 @@ ___
 ## schema
 ![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/schema.png "Database Schema")
 
-## notes
+## technologies
+> Google Charts Infographics API: https://developers.google.com/chart/infographics/docs/qr_codes
 
+> The Internet Chuck Norris Database API: http://www.icndb.com/
 
 ## versions:
-> Version 1.0  February 01, 2019
+> Version 1.0: May 13th, 2019 - setup repo, created url object constructor, implemented url conversion. 
 
-> Version 1.4 February 05, 2019
+> Version 1.1: May 14th, 2019 - implemented long-url route, implemented qr code api, implemented redirect, implement click tracking, implemented crud functionality, added url validation, added timestamp to schema.
+
+> Version 1.2: May 15th, 2019 - Implemented chuck norris api, updated qr code implementation.
 
 ## authors
 > **Stephen Chu** - *Front End* - [stephenchu530](https://github.com/stephenchu530])
@@ -101,11 +106,11 @@ ___
 
 
 -The name of the project
-Names of the team members
+-Names of the team members
 -A description of the project
 -The overall problem domain and how the project solves those problems
-Semantic versioning, beginning with version 1.0.0 and incremented as changes are made
+-Semantic versioning, beginning with version 1.0.0 and incremented as changes are made
 A list of any libraries, frameworks, or packages that your application requires in order to properly function
 -Instructions that the user may need to follow in order to get your application up and running on their own computer
 -Clearly defined API endpoints with sample responses
-Clearly defined database schemas
+-Clearly defined database schemas
