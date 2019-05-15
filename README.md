@@ -59,7 +59,7 @@ ___
 ![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/decrementresponse1.png "An example response")
 ![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/decrementresponse2.png "An example response")
 
-## methods
+## functions
 > getShortUrl(): The handler responsible for taking in a url and sending back an object.
 
 > handleRedirect(): The handler responsible for redirecting shortened links to the original url.
@@ -68,7 +68,7 @@ ___
 
 
 ## schema
-![alt text](https://github.com/clothing-color-coordinator/API/blob/master/assets/MidtermTables.PNG "Database Schema")
+![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/schema.png "Database Schema")
 
 ## notes
 
