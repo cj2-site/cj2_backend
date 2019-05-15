@@ -192,7 +192,8 @@ URL.prototype.create_hash = function() {
 
 //function to get qr code
 URL.prototype.getQRCode = function() {
-  this.qr_code = `http://api.qrserver.com/v1/create-qr-code/?data=${ this.short_url }!&size=100x100`;
+  let qr_url = `https://cj2.site/${this.short_url}`;
+  this.qr_code = `http://api.qrserver.com/v1/create-qr-code/?data=${ qr_url }&size=100x100`;
 };
 
 //function for error handling
