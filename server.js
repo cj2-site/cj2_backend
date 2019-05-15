@@ -31,6 +31,7 @@ app.put('*', decrementShortUrl);
 
 
 
+
 /***********
  * Handlers
  */
@@ -41,7 +42,8 @@ function getShortUrl(request, response) {
 
   //validate the entered url
   if(/http(s)?:\/\/cj2.site(\/\w*)?/.test(url)){
-    response.send(request.query.data);
+    generateError(response);
+    // response.send(request.query.data);
   } else {
     let sql = 'SELECT * FROM url WHERE long_url = $1;';
     let values = [url];
@@ -61,7 +63,6 @@ function getShortUrl(request, response) {
 
           response.send(newURL);
         }
-      // response.send((data.rowCount > 0) ? data.rows[0] : shortenURL(url))
       })
 
       .catch(error => handleError(error));
@@ -193,3 +194,13 @@ URL.prototype.create_hash = function() {
 URL.prototype.getQRCode = function() {
   this.qr_code = `http://api.qrserver.com/v1/create-qr-code/?data=${ this.short_url }!&size=100x100`;
 };
+
+//function for error handling
+function generateError(response) {
+  let norris_url = 'http://api.icndb.com/jokes/random';
+  superagent.get(norris_url)
+    .then(result => {
+      response.status(500).send(`Status 500: ${result.body.value.joke}`);
+    });
+
+}
