@@ -79,9 +79,13 @@ ___
 > Version 1.4 February 05, 2019
 
 ## authors
-> **Carlos Castillo** - *Initial work* - [castillocarlosr](https://github.com/castillocarlosr])
+> **Stephen Chu** - *Front End* - [stephenchu530](https://github.com/stephenchu530])
 
-> **Charles Clemens** - *Initial work* - [CClemensJr](https://github.com/CClemensJr)
+> **John Winters** - *Front End* - [thatsjustjohn](https://github.com/thatsjustjohn])
+
+> **Jorie Fernandez** - *Back End* - [joriefernandez](https://github.com/joriefernandez])
+
+> **Charles Clemens** - *Back End* - [CClemensJr](https://github.com/CClemensJr)
 
 ## license
 > This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
