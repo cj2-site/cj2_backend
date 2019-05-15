@@ -29,21 +29,35 @@
 7. Enjoy the site!
 
 ## endpoints
-### get\[scheme\]palette example
+### get: ~/long-url
+> This route handles the conversion of a url into a shortened url. It sends a URL object to the front end that includes the short url as a property.
 ___
-#### request
-`https://colorwheelapi20190205024526.azurewebsites.net/api/GetAnalogousPalette/Red `
+#### example request
+![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/long-urlrequest.png "An example request")
 
-#### response
-![alt text](https://github.com/clothing-color-coordinator/API/blob/master/assets/getAnalogousResponse.PNG "Get Analogous Palette")
+#### example response
+![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/long-urlresponse.png "An example response")
 
-### check\[scheme\] example
+
+### get: ~/redirect
+> This route handles the linking of a short link to the original url.
 ___
-#### request
-`https://colorwheelapi20190205024526.azurewebsites.net/api/CheckAnalogous/Yellow,Yellow-Orange,Yellow-Green
+#### example request
+![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/redirectrequest.png "An example request")
 
-#### response
-![alt text](https://github.com/clothing-color-coordinator/API/blob/master/assets/checkAnalogousResponse.PNG "Check Analogous")
+#### example response
+![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/redirectresponse.png "An example response")
+
+
+### put: ~/update
+> This route handles the removal of links from the database. Each time a user deletes their instance of the link, the times_created property will decrement. Once times_created reaches 0 (all users have deleted the link) then the link will be removed from the database.
+___
+#### example request
+![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/decrementrequest.png "An example request")
+
+#### example response
+![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/decrementresponse1.png "An example response")
+![alt text](https://github.com/cj2-site/cj2_backend/blob/master/assets/decrementresponse2.png "An example response")
 
 ## methods
 Each controller has a two Get methods. One method handles the Get\[scheme\]Palette route and takes a single color, verifies the inbound color exists in the database, creates a palette if the color is in the specified palette table, and returns an error if either the palette or color is null. If not, it creates a Color object for each color in the palette, puts it in a list, and then returns the list of Color objects via the ASP.NET Core OK method.
@@ -80,12 +94,12 @@ The other Get method handles the Check\[scheme\] route. It takes in 3-4 colors, 
 > The backend of the CJ2 site receives a url from the front end, shortens it, then returns it to the front end. It also handles the short url functionality by redirecting to the original url
 
 
-The name of the project
+-The name of the project
 Names of the team members
-A description of the project
-The overall problem domain and how the project solves those problems
+-A description of the project
+-The overall problem domain and how the project solves those problems
 Semantic versioning, beginning with version 1.0.0 and incremented as changes are made
 A list of any libraries, frameworks, or packages that your application requires in order to properly function
-Instructions that the user may need to follow in order to get your application up and running on their own computer
-Clearly defined API endpoints with sample responses
+-Instructions that the user may need to follow in order to get your application up and running on their own computer
+-Clearly defined API endpoints with sample responses
 Clearly defined database schemas
