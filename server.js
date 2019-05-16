@@ -82,7 +82,7 @@ function handleRedirect(request, response) {
   return client.query(sql, values)
     .then(updateDBClicks(url))
     .then(data => response.redirect(`${ data.rows[0].long_url }`))
-    .catch(error => handleError(error, response));
+    .catch(error => generateError(error, response));
 }
 
 // This function decrements the times created then deletes from db is 0
@@ -111,7 +111,7 @@ function decrementShortUrl(request, response) {
 
       response.send(data.rows[0]);
     })
-    .catch(error => handleError(error, response));
+    .catch(error => generateError(error, response));
 }
 
 // This function takes an error and then sends a generalized error to the user.
@@ -121,6 +121,17 @@ function handleError(err, res) {
   if (res) {
     res.status(500).send('Status 500: I done messed up.');
   }
+}
+
+// Function for error handling
+function generateError(err, response) {
+  // Don't worry about this...
+  let norris_url = 'http://api.icndb.com/jokes/random';
+  superagent.get(norris_url)
+    .then(result => {
+      response.status(500).send(`Status 500 Server Error: ${result.body.value.joke}`);
+    })
+    .catch(error => handleError(error, response));
 }
 
 
@@ -200,12 +211,4 @@ URL.prototype.getQRCode = function() {
   this.qr_code = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=https://cj2.site/${this.short_url}`;
 };
 
-// Function for error handling
-function generateError(response) {
-  // Don't worry about this...
-  let norris_url = 'http://api.icndb.com/jokes/random';
-  superagent.get(norris_url)
-    .then(result => {
-      response.status(500).send(`Status 500: ${result.body.value.joke}`);
-    });
-}
+
