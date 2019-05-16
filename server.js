@@ -186,7 +186,7 @@ function checkDB(param){
  **************/
 
 // URL Constructor
-function URL (long_url) {
+function URL(long_url) {
   this.long_url = long_url,
   this.short_url = '',
   this.clicks = 0,
@@ -215,13 +215,3 @@ URL.prototype.create_hash = function() {
 URL.prototype.getQRCode = function() {
   this.qr_code = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=https://cj2.site/${this.short_url}`;
 };
-
-// Function for error handling
-function generateError(response) {
-  // Don't worry about this...
-  let norris_url = 'http://api.icndb.com/jokes/random';
-  superagent.get(norris_url)
-    .then(result => {
-      response.status(500).send(`Status 500: ${result.body.value.joke}`);
-    });
-}
