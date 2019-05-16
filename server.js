@@ -85,6 +85,8 @@ function handleRedirect(request, response) {
 
 
 // This function decrements the times created then deletes from db is 0
+// The premise of this function keeps states for each user possibly using the same link
+// And to not remove that link if one of N user chooses to delete their link from the DB
 function decrementShortUrl(request, response) {
   let url = request.params[0].slice(1);
   let sql = 'SELECT * FROM url WHERE short_url = $1;';
@@ -141,7 +143,8 @@ function shortenURL (url){
   return newUrl;
 }
 
-//function to update the  number of clicks
+// Function to update the  number of clicks
+// Takes in a String
 function updateDBClicks (shorturl){
   let sql = 'UPDATE url SET clicks = clicks+1 WHERE short_url = $1;';
   let values = [shorturl];
@@ -149,7 +152,8 @@ function updateDBClicks (shorturl){
   client.query(sql, values);
 }
 
-//function to check if db already contains the short url
+// Function to check if db already contains the short url
+// Takes in a String and returns a Bool
 function checkDB(param){
   let sql = 'SELECT * FROM url WHERE short_url = $1;';
   let values = [param];
@@ -191,14 +195,15 @@ URL.prototype.create_hash = function() {
   this.short_url = hash;
 };
 
-//function to get qr code
+// Function to get qr code
 URL.prototype.getQRCode = function() {
   this.qr_code = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=https://cj2.site/${this.short_url}`;
   
 };
 
-//function for error handling
+// Function for error handling
 function generateError(response) {
+  // Don't worry about this...
   let norris_url = 'http://api.icndb.com/jokes/random';
   superagent.get(norris_url)
     .then(result => {
