@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/cj2-site/cj2_backend#readme",
   "dependencies": {
+    "bs58": "^4.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.16.4",
