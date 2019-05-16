@@ -1,8 +1,8 @@
 'use strict';
 
-/*********
+/*******************
  * MIDDLEWARE SETUP
- */
+ *******************/
 
 require('dotenv').config();
 const superagent = require('superagent');
@@ -22,19 +22,21 @@ client.connect();
 app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
 
 
-/***********
+
+/*********
  * Routes
- */
+ *********/
+
 app.get('/long-url', getShortUrl);
 app.get('*', handleRedirect);
 app.put('*', decrementShortUrl);
 
 
 
-
 /***********
  * Handlers
- */
+ ***********/
+
 // This route handler checks the db for a record then returns it, else it returns a new url object
 function getShortUrl(request, response) {
   let url = request.query.data;
@@ -83,7 +85,6 @@ function handleRedirect(request, response) {
     .catch(error => handleError(error));
 }
 
-
 // This function decrements the times created then deletes from db is 0
 // The premise of this function keeps states for each user possibly using the same link
 // And to not remove that link if one of N user chooses to delete their link from the DB
@@ -124,7 +125,7 @@ function handleError(err, res) {
 
 
 
-/***********
+/**********
  * Helpers
  **********/
 
@@ -168,11 +169,11 @@ function checkDB(param){
 
 
 
-
-
-/***********
+/**************
  * Constructor
- */
+ **************/
+
+// URL Constructor
 function URL (long_url) {
   this.long_url = long_url,
   this.short_url = '',
@@ -191,14 +192,12 @@ URL.prototype.create_hash = function() {
     hash = hash.slice(index, index + 4);
     console.log('Duplicate short_url');
   }
-
   this.short_url = hash;
 };
 
 // Function to get qr code
 URL.prototype.getQRCode = function() {
   this.qr_code = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=https://cj2.site/${this.short_url}`;
-  
 };
 
 // Function for error handling
@@ -209,5 +208,4 @@ function generateError(response) {
     .then(result => {
       response.status(500).send(`Status 500: ${result.body.value.joke}`);
     });
-
 }
