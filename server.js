@@ -188,7 +188,7 @@ URL.prototype.create_hash = function() {
   let hash = sha256(this.long_url);
   // Test for base 58 hash
   hash = bs58.encode(Buffer.from(hash));
-  
+
   hash = hash.slice(index, index + 4);
 
   while(checkDB(hash) && index < hash.length){
@@ -203,7 +203,6 @@ URL.prototype.create_hash = function() {
 // Function to get qr code
 URL.prototype.getQRCode = function() {
   this.qr_code = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=https://cj2.site/${this.short_url}`;
-  
 };
 
 
@@ -215,5 +214,4 @@ function generateError(response) {
     .then(result => {
       response.status(500).send(`Status 500: ${result.body.value.joke}`);
     });
-
 }
