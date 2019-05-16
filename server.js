@@ -1,8 +1,8 @@
 'use strict';
 
-/*********
+/*******************
  * MIDDLEWARE SETUP
- */
+ *******************/
 
 require('dotenv').config();
 const superagent = require('superagent');
@@ -23,19 +23,21 @@ client.connect();
 app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
 
 
-/***********
+
+/*********
  * Routes
- */
+ *********/
+
 app.get('/long-url', getShortUrl);
 app.get('*', handleRedirect);
 app.put('*', decrementShortUrl);
 
 
 
-
 /***********
  * Handlers
- */
+ ***********/
+
 // This route handler checks the db for a record then returns it, else it returns a new url object
 function getShortUrl(request, response) {
   let url = request.query.data;
@@ -66,7 +68,7 @@ function getShortUrl(request, response) {
         }
       })
 
-      .catch(error => handleError(error));
+      .catch(error => handleError(error, response));
   }
 }
 
@@ -81,9 +83,8 @@ function handleRedirect(request, response) {
   return client.query(sql, values)
     .then(updateDBClicks(url))
     .then(data => response.redirect(`${ data.rows[0].long_url }`))
-    .catch(error => handleError(error));
+    .catch(error => generateError(error, response));
 }
-
 
 // This function decrements the times created then deletes from db is 0
 // The premise of this function keeps states for each user possibly using the same link
@@ -111,7 +112,7 @@ function decrementShortUrl(request, response) {
 
       response.send(data.rows[0]);
     })
-    .catch(error => handleError(error));
+    .catch(error => generateError(error, response));
 }
 
 // This function takes an error and then sends a generalized error to the user.
@@ -123,9 +124,20 @@ function handleError(err, res) {
   }
 }
 
+// Function for error handling
+function generateError(err, response) {
+  // Don't worry about this...
+  let norris_url = 'http://api.icndb.com/jokes/random';
+  superagent.get(norris_url)
+    .then(result => {
+      response.status(500).send(`Status 500 Server Error: ${result.body.value.joke}`);
+    })
+    .catch(error => handleError(error, response));
+}
 
 
-/***********
+
+/**********
  * Helpers
  **********/
 
@@ -169,11 +181,11 @@ function checkDB(param){
 
 
 
-
-
-/***********
+/**************
  * Constructor
- */
+ **************/
+
+// URL Constructor
 function URL (long_url) {
   this.long_url = long_url,
   this.short_url = '',
@@ -196,16 +208,13 @@ URL.prototype.create_hash = function() {
     hash = hash.slice(index, index + 4);
     console.log('Duplicate short_url');
   }
-
   this.short_url = hash;
 };
 
 // Function to get qr code
 URL.prototype.getQRCode = function() {
   this.qr_code = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=https://cj2.site/${this.short_url}`;
-  
 };
-
 
 // Function for error handling
 function generateError(response) {
@@ -215,5 +224,3 @@ function generateError(response) {
     .then(result => {
       response.status(500).send(`Status 500: ${result.body.value.joke}`);
     });
-
-}
