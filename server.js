@@ -10,6 +10,7 @@ const pg = require('pg');
 const cors = require('cors');
 const express = require('express');
 const sha256 = require('js-sha256');
+const bs58 = require('bs58');
 const app = express();
 app.use(cors());
 
@@ -184,7 +185,11 @@ function URL (long_url) {
 // Method for creating short_url hash
 URL.prototype.create_hash = function() {
   let index = 0;
-  let hash = sha256(this.long_url).slice(index, index + 4);
+  let hash = sha256(this.long_url);
+  // Test for base 58 hash
+  hash = bs58.encode(Buffer.from(hash));
+  
+  hash = hash.slice(index, index + 4);
 
   while(checkDB(hash) && index < hash.length){
     index += 4;
@@ -200,6 +205,7 @@ URL.prototype.getQRCode = function() {
   this.qr_code = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=https://cj2.site/${this.short_url}`;
   
 };
+
 
 // Function for error handling
 function generateError(response) {
