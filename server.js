@@ -67,7 +67,7 @@ function getShortUrl(request, response) {
         }
       })
 
-      .catch(error => handleError(error));
+      .catch(error => handleError(error, response));
   }
 }
 
@@ -82,7 +82,7 @@ function handleRedirect(request, response) {
   return client.query(sql, values)
     .then(updateDBClicks(url))
     .then(data => response.redirect(`${ data.rows[0].long_url }`))
-    .catch(error => handleError(error));
+    .catch(error => handleError(error, response));
 }
 
 // This function decrements the times created then deletes from db is 0
@@ -111,7 +111,7 @@ function decrementShortUrl(request, response) {
 
       response.send(data.rows[0]);
     })
-    .catch(error => handleError(error));
+    .catch(error => handleError(error, response));
 }
 
 // This function takes an error and then sends a generalized error to the user.
