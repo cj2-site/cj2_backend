@@ -200,7 +200,7 @@ URL.prototype.create_hash = function() {
   let hash = sha256(this.long_url);
   // Test for base 58 hash
   hash = bs58.encode(Buffer.from(hash));
-  
+
   hash = hash.slice(index, index + 4);
 
   while(checkDB(hash) && index < hash.length){
@@ -224,3 +224,4 @@ function generateError(response) {
     .then(result => {
       response.status(500).send(`Status 500: ${result.body.value.joke}`);
     });
+}
