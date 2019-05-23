@@ -127,7 +127,7 @@ function handleError(err, res) {
 // Function for error handling
 function generateError(err, response) {
   // Don't worry about this...
-  let norris_url = 'http://api.icndb.com/jokes/random';
+  let norris_url = 'http://api.icndb.com/jokes/random?exclude=explicit';
   superagent.get(norris_url)
     .then(result => {
       response.status(500).send(`Status 500 Server Error: ${result.body.value.joke}`);
